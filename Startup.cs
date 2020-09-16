@@ -42,13 +42,22 @@ namespace razortest_3._1
                 app.UseHsts();
             }
 
-            // REMOVED
+            // REMOVED -- don't want HTTPS redirection rule until we configure
+            //            the server with a certificate
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            // ADDED
+            // ADDED -- optionally reconfigure where ~/ points based on an
+            //          environment variable
+            string pathBase = Environment.GetEnvironmentVariable("PATH_BASE");
+            if (!string.IsNullOrWhiteSpace(pathBase))
+            {
+                app.UsePathBase(pathBase);
+            }
+
+            // ADDED -- Honor forwarded headers from Nginx
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
