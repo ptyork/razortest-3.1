@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>razortest_3._1</RootNamespace>
+    <RootNamespace>razortest</RootNamespace>
   </PropertyGroup>
 
 </Project>

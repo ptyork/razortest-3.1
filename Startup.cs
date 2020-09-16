@@ -31,6 +31,20 @@ namespace razortest_3._1
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // ADDED -- optionally reconfigure where ~/ points based on an
+            //          environment variable
+            string pathBase = Environment.GetEnvironmentVariable("PATH_BASE");
+            if (!string.IsNullOrWhiteSpace(pathBase))
+            {
+                app.UsePathBase(pathBase);
+            }
+
+            // ADDED -- Honor forwarded headers from Nginx
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });    
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -49,19 +63,6 @@ namespace razortest_3._1
 
             app.UseRouting();
 
-            // ADDED -- optionally reconfigure where ~/ points based on an
-            //          environment variable
-            string pathBase = Environment.GetEnvironmentVariable("PATH_BASE");
-            if (!string.IsNullOrWhiteSpace(pathBase))
-            {
-                app.UsePathBase(pathBase);
-            }
-
-            // ADDED -- Honor forwarded headers from Nginx
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });    
 
             app.UseAuthorization();
 
